@@ -40,25 +40,30 @@ def home():
 
     start_Str=(request.args.get("start") or "".strip())
     end_Str=(request.args.get("end") or "".strip())
+    selected_category=(request.args.get("selected_category") or "".strip())
 
     start_date=date_parser(start_Str)
     end_date=date_parser(end_Str)
-
+    today= date.today().isoformat()
+    
     if start_date and end_date and end_date<start_date:
         flash("end date cannot be before start date","error")
         start_date=end_date=None
         start_Str=end_Str=""
+    
+
     q=Expense.query
     if start_date :
         q=q.filter(Expense.date>=start_date)
     if end_date:
       q=q.filter(Expense.date <= end_date)
-
+    if selected_category:
+        q=q.filter(Expense.category == selected_category)
 
     category=['Food','Transport',"Rent",'Utilities','Health']
     data=q.order_by(Expense.date.desc(),Expense.id.desc()).all()
     total = round(sum(t.amount for t in data),2)
-    return render_template('index.html',data=data ,category=category ,total=total ,start_Str=start_Str , end_Str=end_Str,today=date.today().isoformat())
+    return render_template('index.html',data=data ,category=category ,total=total ,start_Str=start_Str , end_Str=end_Str,today=today , selected_category=selected_category )
 
 
 @app.route("/add",methods=['POST'])
