@@ -1,7 +1,7 @@
-from flask import Flask , render_template,request,flash,redirect,url_for
+from flask import Flask , render_template,request,flash,redirect,url_for,Response
 
 from flask_sqlalchemy import SQLAlchemy
-from datetime import date ,datetime
+from datetime import date ,datetime ,date as d
 from sqlalchemy import func
 
 app=Flask(__name__)
@@ -34,6 +34,7 @@ def date_parser(s:str):
     except ValueError:
         return None
     
+categories=['utilities','food','transport','rent']
 
 @app.route("/")
 def home():
@@ -136,10 +137,79 @@ def delete(id):
     db.session.delete(e)
     print(e)
     db.session.commit()
-    flash("Deleted successfully","success")
+    # flash("Deleted successfully","success")
 
     return redirect(url_for("home"))
 
+@app.route("/export.csv")
+def export_csv():
+    start_Str=(request.args.get("start") or "".strip())
+    end_Str=(request.args.get("end") or "".strip())
+    selected_category=(request.args.get("selected_category") or "".strip())
+
+    start_date=date_parser(start_Str)
+    end_date=date_parser(end_Str)
+
+
+    q=Expense.query
+    if start_date :
+        q=q.filter(Expense.date>=start_date)
+    if end_date:
+        q=q.filter(Expense.date <= end_date)
+    if selected_category:
+        q=q.filter(Expense.category == selected_category)
+
+    expenses=q.order_by(Expense.date,Expense.id).all()
+
+    lines=["date,description,category,amount"]
+
+    for e in expenses:
+        lines.append(f"{e.date.isoformat()},{e.description},{e.category},{e.amount:.2f}")
+        csv_data="\n".join(lines)
+
+    fname_start=start_Str or "all"   
+    fname_end=end_Str or "all"   
+    
+    filename=f"expenses_{fname_start} to {fname_end}.csv"
+
+    return Response(csv_data,headers={
+        "Content-Type":"text/csv",
+        "content-Disposition":f"attachment; filename={filename}"
+    })
+
+@app.route("/update/<int:expense_id>",methods=['GET'])
+def update(expense_id):
+    print("id",expense_id)
+    q=Expense.query.get_or_404(expense_id)
+    # print(q)
+    return render_template('edit.html', data=q ,categories=categories)
+
+@app.route('/update/<int:expense_id>', methods=['POST'])
+def edit(expense_id):
+    q=Expense.query.get_or_404(expense_id)
+    description= request.form.get('description')
+    amount= request.form.get('amount')
+    category= request.form.get('category')
+    date= request.form.get('date')
+
+    if not description or not amount or not category or not date :
+        flash("Fields can't be empty","error")
+        return redirect(url_for('edit',expense_id=q.id))
+    
+    try :
+        d=datetime.strptime(date,"%Y-%m-%d").date() if date else date.today()
+    except ValueError:
+        d=date.today()
+
+    q.category=category
+    q.date=d
+    q.description=description
+    q.amount=amount
+    # db.session.add(description,amount,category,date)
+    db.session.commit()
+
+   
+    return redirect(url_for("home"))
 
 if __name__== "__main__":
     app.run(debug=True)
