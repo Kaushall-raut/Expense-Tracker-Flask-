@@ -1,120 +1,163 @@
-💰 Expense Tracker – Flask
+# Expense Tracker (Flask)
 
-A full-featured Expense Tracker web application built using Python, Flask, and SQLite.
-This application allows users to add, filter, update, delete, visualize, and export expenses efficiently.
+A full-featured **Expense Tracker web application** built using **Python, Flask, and SQLite**.
+It allows users to **add, filter, update, delete, visualize, and export expenses** efficiently.
 
-📖 Overview
+---
 
-This Expense Tracker helps users manage daily expenses with powerful features like:
+## Overview
 
-Date-wise filtering
+This Expense Tracker helps users manage daily expenses with practical features such as:
 
-Category-wise analysis
+* Date-wise filtering
+* Category-wise analysis
+* Expense editing and deletion
+* CSV export
+* Visual charts for insights
 
-Expense editing and deletion
+This project is ideal for **learning Flask, SQLAlchemy, and backend development**.
 
-CSV export
+---
 
-Charts for insights
+## Features
 
-It is ideal for learning Flask, SQLAlchemy, and backend logic with real-world use cases.
+### Expense Management
 
-✨ Features
-🧾 Expense Management
+* Add new expenses (description, amount, category, date)
+* Edit existing expenses
+* Delete expenses
 
-Add new expenses (description, amount, category, date)
+### Filtering & Search
 
-Edit existing expenses
+* Filter expenses by:
 
-Delete expenses
+  * Start date
+  * End date
+  * Category
+* Validation for incorrect date ranges
 
-🔍 Filtering & Search
+### Analytics
 
-Filter expenses by:
+* Total expense calculation
+* Category-wise expense summary
+* Date-wise expense chart data
 
-Start date
+### Export
 
-End date
+* Export filtered expenses as **CSV**
 
-Category
+### Notifications
 
-Validation for incorrect date ranges
+* Success and error messages using Flask `flash`
 
-📊 Analytics
+---
 
-Total expense calculation
+## Tech Stack
 
-Category-wise expense summary
+| Layer    | Technology               |
+| -------- | ------------------------ |
+| Backend  | Python, Flask            |
+| Database | SQLite                   |
+| ORM      | SQLAlchemy               |
+| Frontend | HTML, CSS, Jinja2        |
+| Charts   | Chart.js                 |
+| Server   | Flask Development Server |
 
-Date-wise expense chart data
+---
 
-📤 Export
+## Project Structure
 
-Export filtered expenses as CSV file
+```
+Expense-Tracker-Flask-/
+├── app.py
+├── templates/
+│   ├── index.html
+│   ├── edit.html
+│   └── base.html
+├── instance/
+│   └── expense.db
+└── README.md
+```
 
-🔐 Flash Messages
+---
 
-Success and error messages using Flask flash
+## Database Schema
 
-🛠️ Tech Stack
-Layer	Technology
-Backend	Python, Flask
-Database	SQLite
-ORM	SQLAlchemy
-Frontend	HTML, CSS, Jinja2
-Charts	Chart.js (via template)
-Server	Flask Development Server
+### Expense Table
 
-🚀 Installation & Setup
-1️⃣ Clone the Repository
+| Column      | Type                  |
+| ----------- | --------------------- |
+| id          | Integer (Primary Key) |
+| description | String                |
+| amount      | Float                 |
+| category    | String                |
+| date        | Date                  |
+
+---
+
+## Installation & Setup
+
+### Clone the Repository
+
+```bash
 git clone https://github.com/Kaushall-raut/Expense-Tracker-Flask-.git
 cd Expense-Tracker-Flask-
+```
 
-2️⃣ Create & Activate Virtual Environment
+### Create Virtual Environment
 
-Windows
-
+```bash
 python -m venv env
 env\Scripts\activate
+```
 
+### Install Dependencies
 
-Mac / Linux
-
-python3 -m venv env
-source env/bin/activate
-
-3️⃣ Install Dependencies
+```bash
 pip install flask flask-sqlalchemy
+```
 
+### Run the Application
 
-(Or use requirements.txt if available)
-
-4️⃣ Run the Application
+```bash
 python app.py
+```
 
-5️⃣ Open in Browser
+### Open in Browser
+
+```
 http://127.0.0.1:5000/
+```
 
-🧪 Usage Guide
+---
 
-➕ Add expenses using the form
+## Usage
 
-📅 Filter expenses by date range
+* Add expenses using the form
+* Filter by date range and category
+* Edit or delete records
+* Export expenses as CSV
+* View totals and charts
 
-🗂 Filter expenses by category
+---
 
-✏️ Edit existing records
+## Future Enhancements
 
-🗑 Delete unwanted expenses
+* User authentication
+* Monthly / yearly reports
+* Improved charts
+* PDF export
+* Cloud database support
 
-📤 Export data as CSV
+---
 
-📊 View analytics via charts
+## Author
 
-📤 CSV Export Example
-expenses_2024-01-01 to 2024-01-31.csv
+**Kaushal Raut**
+GitHub: [https://github.com/Kaushall-raut](https://github.com/Kaushall-raut)
 
+---
 
-Contains:
+## License
 
-date,description,category,amount
+This project is open-source and free to use for **learning and academic purposes**.
