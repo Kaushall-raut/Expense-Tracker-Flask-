@@ -152,7 +152,7 @@
         <span
           class="inline-block rounded-xl border border-slate-700 bg-slate-800 px-3 py-1 font-semibold"
         >
-          $0.00
+         Rs {{total}}
         </span>
       </div>
 
@@ -173,7 +173,7 @@
               </tr>
             </thead>
             <tbody>
-              {% if {{data}}  %}
+              {% if data  %}
                 
               {% for d in data %}
               
@@ -181,13 +181,15 @@
                 <td class="px-4 py-2">{{d.date}}</td>
                 <td class="px-4 py-2">{{d.description}}</td>
                 <td class="px-4 py-2">{{d.category}}</td>
-                <td class="px-4 py-2 text-right">{{d.amount}}</td>
+                <td class="px-4 py-2 text-right">rs {{d.amount}}</td>
                 <td class="px-4 py-2 text-right">
+                  <form action="{{url_for("delete",id=d.id)}}" method="post" onsubmit="confirm('Are you sure you want to delete')">
                   <button
                   class="text-rose-300 hover:text-rose-200 text-xs border border-rose-400/30 px-3 py-1 rounded-lg"
                   >
                   Delete
                 </button>
+                </form>
               </td>
             </tr>
             {% endfor %}

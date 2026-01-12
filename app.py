@@ -26,8 +26,10 @@ with app.app_context():
 
 @app.route("/")
 def home():
+    category=['Food','Transport',"Rent",'Utilities','Health']
     data=Expense.query.order_by(Expense.date.desc(),Expense.id.desc()).all()
-    return render_template('index.html',data=data)
+    total = round(sum(t.amount for t in data),2)
+    return render_template('index.html',data=data ,category=category ,total=total )
 
 
 @app.route("/add",methods=['POST'])
@@ -59,6 +61,17 @@ def add():
     db.session.commit()
     flash("Form submitted successfully")
     
+
+    return redirect(url_for("home"))
+
+
+@app.route("/delete/<int:id>", methods=['POST'])
+def delete(id):
+    e=Expense.query.get_or_404(id)
+    db.session.delete(e)
+    print(e)
+    db.session.commit()
+    flash("Deleted successfully","success")
 
     return redirect(url_for("home"))
 
