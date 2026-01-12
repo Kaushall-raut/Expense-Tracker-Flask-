@@ -24,12 +24,41 @@ with app.app_context():
     db.create_all()
 
 
+def date_parser(s:str):
+
+    if not s:
+        return None
+    try:
+        return datetime.strptime(s,"%Y-%m-%d").date()
+    except ValueError:
+        return None
+    
+
 @app.route("/")
 def home():
+
+
+    start_Str=(request.args.get("start") or "".strip())
+    end_Str=(request.args.get("end") or "".strip())
+
+    start_date=date_parser(start_Str)
+    end_date=date_parser(end_Str)
+
+    if start_date and end_date and end_date<start_date:
+        flash("end date cannot be before start date","error")
+        start_date=end_date=None
+        start_Str=end_Str=""
+    q=Expense.query
+    if start_date :
+        q=q.filter(Expense.date>=start_date)
+    if end_date:
+      q=q.filter(Expense.date <= end_date)
+
+
     category=['Food','Transport',"Rent",'Utilities','Health']
-    data=Expense.query.order_by(Expense.date.desc(),Expense.id.desc()).all()
+    data=q.order_by(Expense.date.desc(),Expense.id.desc()).all()
     total = round(sum(t.amount for t in data),2)
-    return render_template('index.html',data=data ,category=category ,total=total )
+    return render_template('index.html',data=data ,category=category ,total=total ,start_Str=start_Str , end_Str=end_Str,today=date.today().isoformat())
 
 
 @app.route("/add",methods=['POST'])
